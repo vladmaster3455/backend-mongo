@@ -11,7 +11,6 @@ import {
 import KPICard from '../components/dashboard/KPICard';
 import RecentList from '../components/dashboard/RecentList';
 import { usersAPI, transactionsAPI } from '../config/api';
-
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 
 function Dashboard() {
@@ -27,17 +26,12 @@ function Dashboard() {
 
   useEffect(() => {
     fetchDashboardData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      
-      // Récupérer tous les utilisateurs
       const usersResponse = await usersAPI.getAllUsers();
-      
-      // Compter par type
       const users = usersResponse.users || [];
       const statsData = {
         totalDistributeurs: users.filter(u => u.typeUtilisateur === 'Distributeur').length,
@@ -46,11 +40,9 @@ function Dashboard() {
       };
       setStats(statsData);
 
-      // Récupérer l'historique des transactions récentes
       const transactionsResponse = await transactionsAPI.getHistorique(10, 1);
       setRecentTransactions(transactionsResponse.transactions || []);
 
-      // Récupérer les statistiques de transactions
       try {
         const statsResponse = await transactionsAPI.getStatistiques();
         setTransactionStats(statsResponse.statistiques);
@@ -75,9 +67,7 @@ function Dashboard() {
 
   if (error) {
     return (
-      <Alert severity="error" sx={{ mb: 3 }}>
-        {error}
-      </Alert>
+      <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>
     );
   }
 
@@ -95,43 +85,33 @@ function Dashboard() {
         Tableau de Bord
       </Typography>
 
-      {/* KPI Cards - Forçage sur une seule ligne (Même sur Mobile) */}
+      {/* --- SECTION FORÇAGE HORIZONTAL DES CERCLES --- */}
       <Grid 
         container 
-        spacing={{ xs: 1, sm: 2, md: 3 }} 
         sx={{ 
           mb: { xs: 3, sm: 4 },
-          flexWrap: 'nowrap', // Empêche le retour à la ligne sur mobile
-          overflowX: 'hidden', // Évite le scroll si possible
-          justifyContent: 'space-between',
-          width: '100%',
-          margin: '0 auto'
+          display: 'flex',         // Active Flexbox
+          flexDirection: 'row',     // Force l'alignement en ligne
+          flexWrap: 'nowrap',      // Interdit le passage à la ligne sous aucun prétexte
+          justifyContent: 'center', // Centre le groupe de cercles
+          alignItems: 'center',
+          gap: { xs: 1, sm: 2 },    // Espace entre les cercles
+          width: '100%'
         }}
       >
-        <Grid item xs={4}>
-          <KPICard 
-            title="Distributeurs"
-            value={stats.totalDistributeurs}
-            color="#1976d2"
-          />
+        {/* Chaque item prend 33% de la ligne */}
+        <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <KPICard title="Distributeurs" value={stats.totalDistributeurs} color="#1976d2" />
         </Grid>
-        <Grid item xs={4}>
-          <KPICard 
-            title="Clients"
-            value={stats.totalClients}
-            color="#2e7d32"
-          />
+        <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <KPICard title="Clients" value={stats.totalClients} color="#2e7d32" />
         </Grid>
-        <Grid item xs={4}>
-          <KPICard 
-            title="Agents"
-            value={stats.totalAgents}
-            color="#ed6c02"
-          />
+        <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <KPICard title="Agents" value={stats.totalAgents} color="#ed6c02" />
         </Grid>
       </Grid>
+      {/* --- FIN SECTION FORÇAGE --- */}
 
-      {/* Transactions récentes */}
       <Card elevation={3} sx={{ mb: { xs: 3, sm: 4 }, borderRadius: 2 }}>
         <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
           <Typography 
@@ -148,12 +128,10 @@ function Dashboard() {
             <TrendingDownIcon color="secondary" />
             Transactions Récentes
           </Typography>
-
           <RecentList transactions={recentTransactions} />
         </CardContent>
       </Card>
 
-      {/* Message si pas de données */}
       {recentTransactions.length === 0 && (
         <Alert severity="info" sx={{ borderRadius: 2 }}>
           Aucune transaction récente à afficher
