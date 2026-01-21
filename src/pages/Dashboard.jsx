@@ -14,7 +14,6 @@ import { usersAPI, transactionsAPI } from '../config/api';
 
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 
-
 function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -24,7 +23,7 @@ function Dashboard() {
     totalAgents: 0
   });
   const [recentTransactions, setRecentTransactions] = useState([]);
-  const [ setTransactionStats] = useState(null);
+  const [transactionStats, setTransactionStats] = useState(null);
 
   useEffect(() => {
     fetchDashboardData();
@@ -47,16 +46,15 @@ function Dashboard() {
       };
       setStats(statsData);
 
-      // Récupérer l'historique des transactions récentes (y compris annulées)
+      // Récupérer l'historique des transactions récentes
       const transactionsResponse = await transactionsAPI.getHistorique(10, 1);
       setRecentTransactions(transactionsResponse.transactions || []);
 
-      // Récupérer les statistiques de transactions (pour Agent)
+      // Récupérer les statistiques de transactions
       try {
         const statsResponse = await transactionsAPI.getStatistiques();
         setTransactionStats(statsResponse.statistiques);
       } catch (err) {
-        // Si pas Agent, ignorer cette erreur
         console.log('Statistiques non disponibles');
       }
 
@@ -84,45 +82,57 @@ function Dashboard() {
   }
 
   return (
-    <Box sx={{ px: { xs: 1, sm: 2, md: 3 } }}>
+    <Box sx={{ px: { xs: 1, sm: 2, md: 3 }, py: 2 }}>
       <Typography 
         variant="h4" 
         gutterBottom
         sx={{ 
           fontSize: { xs: '1.5rem', sm: '2rem', md: '2.125rem' },
-          mb: { xs: 2, sm: 3 }
+          mb: { xs: 2, sm: 3 },
+          fontWeight: 'bold'
         }}
       >
         Tableau de Bord
       </Typography>
 
-      {/* KPI Cards - Utilisateurs */}
-      <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mb: { xs: 3, sm: 4 } }}>
-        <Grid item xs={12} sm={6} md={4}>
+      {/* KPI Cards - Forçage sur une seule ligne (Même sur Mobile) */}
+      <Grid 
+        container 
+        spacing={{ xs: 1, sm: 2, md: 3 }} 
+        sx={{ 
+          mb: { xs: 3, sm: 4 },
+          flexWrap: 'nowrap', // Empêche le retour à la ligne sur mobile
+          overflowX: 'hidden', // Évite le scroll si possible
+          justifyContent: 'space-between',
+          width: '100%',
+          margin: '0 auto'
+        }}
+      >
+        <Grid item xs={4}>
           <KPICard 
-            title="Nombre total de distributeurs"
+            title="Distributeurs"
             value={stats.totalDistributeurs}
             color="#1976d2"
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={4}>
           <KPICard 
-            title="Nombre total de clients"
+            title="Clients"
             value={stats.totalClients}
             color="#2e7d32"
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={4}>
           <KPICard 
-            title="Nombre total d'agents"
+            title="Agents"
             value={stats.totalAgents}
             color="#ed6c02"
           />
         </Grid>
       </Grid>
 
-      {/* Transactions récentes avec indicateurs d'annulation */}
-      <Card elevation={3} sx={{ mb: { xs: 3, sm: 4 } }}>
+      {/* Transactions récentes */}
+      <Card elevation={3} sx={{ mb: { xs: 3, sm: 4 }, borderRadius: 2 }}>
         <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
           <Typography 
             variant="h6" 
@@ -131,7 +141,8 @@ function Dashboard() {
               display: 'flex', 
               alignItems: 'center', 
               gap: 1,
-              fontSize: { xs: '1rem', sm: '1.25rem' }
+              fontSize: { xs: '1.1rem', sm: '1.25rem' },
+              fontWeight: 'bold'
             }}
           >
             <TrendingDownIcon color="secondary" />
@@ -144,7 +155,7 @@ function Dashboard() {
 
       {/* Message si pas de données */}
       {recentTransactions.length === 0 && (
-        <Alert severity="info">
+        <Alert severity="info" sx={{ borderRadius: 2 }}>
           Aucune transaction récente à afficher
         </Alert>
       )}
