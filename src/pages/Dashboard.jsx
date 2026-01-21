@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Grid, 
   Typography, 
   Box, 
   CircularProgress, 
@@ -26,6 +25,7 @@ function Dashboard() {
 
   useEffect(() => {
     fetchDashboardData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchDashboardData = async () => {
@@ -85,32 +85,35 @@ function Dashboard() {
         Tableau de Bord
       </Typography>
 
-      {/* --- SECTION FORÇAGE HORIZONTAL DES CERCLES --- */}
-      <Grid 
-        container 
+      {/* --- SECTION KPI FORCÉE EN LIGNE SUR MOBILE --- */}
+      <Box 
         sx={{ 
           mb: { xs: 3, sm: 4 },
-          display: 'flex',         // Active Flexbox
-          flexDirection: 'row',     // Force l'alignement en ligne
-          flexWrap: 'nowrap',      // Interdit le passage à la ligne sous aucun prétexte
-          justifyContent: 'center', // Centre le groupe de cercles
+          display: 'flex',           // Force le mode Flex
+          flexDirection: 'row',       // Aligne horizontalement
+          flexWrap: 'nowrap',        // Interdit le retour à la ligne
+          justifyContent: 'space-between', // Espace les cercles
           alignItems: 'center',
-          gap: { xs: 1, sm: 2 },    // Espace entre les cercles
-          width: '100%'
+          width: '100%',
+          gap: { xs: 0.5, sm: 2 }    // Espace minimum sur mobile
         }}
       >
-        {/* Chaque item prend 33% de la ligne */}
-        <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-          <KPICard title="Distributeurs" value={stats.totalDistributeurs} color="#1976d2" />
-        </Grid>
-        <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+        {/* Colonne 1 */}
+        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+          <KPICard title="Distrib." value={stats.totalDistributeurs} color="#1976d2" />
+        </Box>
+
+        {/* Colonne 2 */}
+        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
           <KPICard title="Clients" value={stats.totalClients} color="#2e7d32" />
-        </Grid>
-        <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+        </Box>
+
+        {/* Colonne 3 */}
+        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
           <KPICard title="Agents" value={stats.totalAgents} color="#ed6c02" />
-        </Grid>
-      </Grid>
-      {/* --- FIN SECTION FORÇAGE --- */}
+        </Box>
+      </Box>
+      {/* --- FIN SECTION KPI --- */}
 
       <Card elevation={3} sx={{ mb: { xs: 3, sm: 4 }, borderRadius: 2 }}>
         <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
