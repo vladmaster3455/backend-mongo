@@ -1,8 +1,8 @@
-# 🏦 MiniBank - Application Bancaire Complète
+#  MiniBank - Application Bancaire Complète
 
 Application web de gestion bancaire avec React (frontend) et Express/MongoDB (backend).
 
-## 📋 Structure du projet
+##  Structure du projet
 
 ```
 projet/
@@ -26,7 +26,7 @@ projet/
 └── README.md               # Ce fichier
 ```
 
-## 🚀 Technologies utilisées
+##  Technologies utilisées
 
 ### Backend
 - **Node.js** & **Express** - Serveur API REST
