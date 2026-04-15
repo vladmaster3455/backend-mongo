@@ -47,8 +47,8 @@ projet/
 ### 1. Cloner le dépôt
 
 ```bash
-git clone https://github.com/vladmaster3455/simplon.git
-cd simplon/projet
+git clone https://github.com/vladmaster3455/backend-mongo.git
+cd backend-mongo/projet
 ```
 
 ### 2. Installer le Backend
@@ -76,4 +76,4 @@ npm start
 Le frontend démarre sur `http://localhost:3000`
 
 
-- **Backend (Render)** : À ajouter après déploiement
+- **Backend (Render)** :t
