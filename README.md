@@ -42,7 +42,7 @@ projet/
 - **React Router v6** - Navigation
 - **Fetch API** - Requêtes HTTP
 
-## 📦 Installation locale
+##  Installation locale
 
 ### 1. Cloner le dépôt
 
